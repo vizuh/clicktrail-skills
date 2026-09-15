@@ -60,8 +60,24 @@ tracking assigned to the host application.
 - **Source/runtime drift:** pin the deployed commit before proposing a source fix.
 - **Provider unknown:** record `UNKNOWN`; do not infer acceptance from a local request.
 
+## Bundled resources
+
+Load only the resource that matches the detected surface:
+
+- capture and query loss → [`rules/capture-click-ids.md`](rules/capture-click-ids.md);
+- consent and storage → [`rules/consent-boundary.md`](rules/consent-boundary.md);
+- dataLayer schema → [`rules/data-layer.md`](rules/data-layer.md);
+- duplicate browser/server events → [`rules/deduplication.md`](rules/deduplication.md);
+- evidence and status boundaries → [`rules/verification.md`](rules/verification.md);
+- Google Ads questions → [`references/google-ads.md`](references/google-ads.md);
+- Meta questions → [`references/meta.md`](references/meta.md);
+- Next.js runtime → [`examples/nextjs.md`](examples/nextjs.md);
+- WordPress/WooCommerce runtime → [`examples/wordpress.md`](examples/wordpress.md);
+- Shopify runtime → [`examples/shopify.md`](examples/shopify.md).
+
 ## Chaining
 
-Use `click-id-debugging` for a missing identifier, `utm-and-click-id-persistence`
-for storage behavior, `click-to-crm-attribution` for lead attachment, and
+Use `click-id-debugging` for a provider-neutral missing identifier,
+`utm-and-click-id-persistence` for storage behavior,
+`click-to-crm-attribution` for lead attachment, and
 `offline-conversion-tracking` for destination reconciliation.

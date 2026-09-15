@@ -1,6 +1,6 @@
 ---
 name: click-id-debugging
-description: MUST USE when a user says a GCLID, GBRAID, WBRAID, FBCLID, MSCLKID, TTCLID, or UTM disappeared, is malformed, is missing from a form, or is not reaching a CRM or conversion record.
+description: MUST USE when a provider-neutral click identifier or UTM is missing, malformed, or lost between application boundaries. Use for a general missing-ID trace. Do not use when the task is specifically Google Ads (use google-ads-click-tracking), storage implementation (use preserve-click-ids or utm-and-click-id-persistence), or CRM attachment (use click-to-crm-attribution).
 ---
 
 # Click-ID debugging

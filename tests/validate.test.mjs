@@ -1,6 +1,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
+import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import {
   EXPECTED_SKILLS,
@@ -54,6 +55,18 @@ describe('ClickTrail Problem-Oriented Skills Suite', () => {
         assert.strictEqual(result.valid, true);
         assert.strictEqual(result.errors.length, 0);
       });
+    }
+  });
+
+  it('keeps high-intent routing distinct and links audit resources', () => {
+    const readDescription = (name) => parseFrontmatter(fs.readFileSync(path.join(SKILLS_DIR, name, 'SKILL.md'), 'utf8')).data.description;
+    assert.match(readDescription('click-id-debugging'), /provider-neutral/);
+    assert.match(readDescription('click-id-debugging'), /google-ads-click-tracking/);
+    assert.match(readDescription('preserve-click-ids'), /implement or improve first-party persistence/);
+    assert.match(readDescription('google-ads-click-tracking'), /specifically concerns Google Ads/);
+    const audit = fs.readFileSync(path.join(SKILLS_DIR, 'click-tracking-audit', 'SKILL.md'), 'utf8');
+    for (const resource of ['rules/capture-click-ids.md', 'rules/consent-boundary.md', 'rules/data-layer.md', 'rules/deduplication.md', 'rules/verification.md', 'references/google-ads.md', 'references/meta.md', 'examples/nextjs.md', 'examples/wordpress.md', 'examples/shopify.md']) {
+      assert.match(audit, new RegExp(resource.replace(/[./]/g, '\\$&')));
     }
   });
 
