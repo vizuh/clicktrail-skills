@@ -62,9 +62,14 @@ describe('ClickTrail Problem-Oriented Skills Suite', () => {
     const readDescription = (name) => parseFrontmatter(fs.readFileSync(path.join(SKILLS_DIR, name, 'SKILL.md'), 'utf8')).data.description;
     assert.match(readDescription('click-id-debugging'), /provider-neutral/);
     assert.match(readDescription('click-id-debugging'), /google-ads-click-tracking/);
-    assert.match(readDescription('preserve-click-ids'), /implement or improve first-party persistence/);
+    assert.match(readDescription('preserve-click-ids'), /existing browser implementation loses/);
     assert.match(readDescription('google-ads-click-tracking'), /specifically concerns Google Ads/);
+    assert.match(readDescription('click-id-debugging'), /Do not use for storage-policy design/);
+    assert.match(readDescription('preserve-click-ids'), /do not use for greenfield storage-policy design/);
+    assert.match(readDescription('utm-and-click-id-persistence'), /do not use for a browser-specific implementation repair/);
     const audit = fs.readFileSync(path.join(SKILLS_DIR, 'click-tracking-audit', 'SKILL.md'), 'utf8');
+    assert.match(audit, /Load every resource that matches/);
+    assert.match(audit, /skip unrelated resources/);
     for (const resource of ['rules/capture-click-ids.md', 'rules/consent-boundary.md', 'rules/data-layer.md', 'rules/deduplication.md', 'rules/verification.md', 'references/google-ads.md', 'references/meta.md', 'examples/nextjs.md', 'examples/wordpress.md', 'examples/shopify.md']) {
       assert.match(audit, new RegExp(resource.replace(/[./]/g, '\\$&')));
     }

@@ -1,6 +1,6 @@
 ---
 name: utm-and-click-id-persistence
-description: MUST USE when UTM parameters or advertising click IDs must survive first-page capture, consent decisions, SPA navigation, redirects, authentication, checkout, or a form-to-server handoff.
+description: MUST USE when designing or reviewing the storage policy for UTM parameters and advertising click IDs, including consent, expiry, schema version, first-touch write-once, last-touch updates, and lifecycle boundaries. Use for greenfield or cross-stack persistence contracts; do not use for a browser-specific implementation repair.
 ---
 
 # UTM and click-ID persistence

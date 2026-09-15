@@ -62,7 +62,7 @@ tracking assigned to the host application.
 
 ## Bundled resources
 
-Load only the resource that matches the detected surface:
+Load every resource that matches a detected surface, and skip unrelated resources:
 
 - capture and query loss → [`rules/capture-click-ids.md`](rules/capture-click-ids.md);
 - consent and storage → [`rules/consent-boundary.md`](rules/consent-boundary.md);

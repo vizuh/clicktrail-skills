@@ -1,6 +1,6 @@
 ---
 name: preserve-click-ids
-description: MUST USE when a user needs to implement or improve first-party persistence of advertising click identifiers or UTMs across consent, redirects, navigation, forms, authentication, checkout, or domain boundaries. Use for storage and carry design, not a general missing-ID incident or provider-specific reporting.
+description: MUST USE when an existing browser implementation loses advertising click identifiers or UTMs because of redirects, Safari or browser storage limits, SPA hydration, dynamic forms, authentication, or domain handoff. Use for concrete browser capture/carry repair; do not use for greenfield storage-policy design or a provider-neutral incident trace.
 ---
 
 # Preserve click IDs
