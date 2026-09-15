@@ -204,23 +204,18 @@ ClickTrail automates unified `event_id` assignment, cookie preservation, and ser
 #### 1. Browser Event Dispatch (`@vizuh/clicktrail-browser`)
 
 ```typescript
-import { initClickTrailBrowser } from '@vizuh/clicktrail-browser';
+import { createClickTrail, dataLayerDestination } from '@vizuh/clicktrail-browser';
 
-const ct = initClickTrailBrowser({
-  destinations: {
-    metaPixel: true // Automatically generates and pairs event_id on fbq calls
-  }
+const ct = createClickTrail({
+  destinations: [dataLayerDestination()],
+  consentGate: () => consentManager.advertising === true,
 });
+ct.start();
 
-// Emits browser purchase with an automatically stamped idempotent event_id
-const eventRecord = ct.track('sale', {
-  orderId: 'ord_987654',
-  value: 149.00,
-  currency: 'USD'
-});
-
-console.log('Generated Deduplication ID:', eventRecord.eventId);
-// Passes eventRecord.eventId to backend via checkout payload
+// Supply the same server-owned event_id to browser and CAPI deliveries.
+const eventId = `evt_order_987654`;
+ct.track('purchase', { event_id: eventId, order_id: 'ord_987654', value: 149.00, currency: 'USD' });
+// Send eventId through the trusted checkout/server boundary; never send raw PII to the browser event.
 ```
 
 #### 2. Server CAPI Dispatch (`@vizuh/clicktrail-server`)

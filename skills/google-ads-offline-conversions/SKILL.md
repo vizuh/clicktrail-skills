@@ -7,7 +7,16 @@ description: Upload offline conversion adjustments, qualified leads, and CRM rev
 
 Bridge the gap between online ad clicks and offline revenue. When deals close in your CRM, contracts are signed, or payments process in Stripe days or weeks later, upload conversion adjustments back to Google Ads to train Smart Bidding algorithms on real business value rather than raw form fills.
 
-This skill solves the challenge of capturing and preserving Google click identifiers (`gclid`, `gbraid`, `wbraid`), associating them with customer leads, formatting offline conversion payloads for the Google Ads API, and diagnosing upload rejections.
+This skill solves the challenge of capturing and preserving Google click identifiers (`gclid`, `gbraid`, `wbraid`), associating them with customer leads, selecting the supported Google ingestion path, formatting conversion payloads, and diagnosing upload rejections.
+
+## Current Google ingestion-path decision
+
+Choose the destination before writing upload code:
+
+- **Existing eligible implementation:** use Google Ads API **v25+** `ConversionUploadService.UploadClickConversions`. Google Ads API access levels are now associated with the Google Cloud project that owns the OAuth credentials. The `developer-token` header is optional and ignored after the September 9, 2026 sunset; do not make it a required configuration field.
+- **New or restricted implementation:** use the **Google Ads Data Manager API** offline-events flow. Google Ads API `UploadClickConversions` remains restricted for tokens/projects covered by the historical no-prior-upload rule (no qualifying offline-upload requests between December 17, 2025 and June 15, 2026). If it returns `CUSTOMER_NOT_ALLOWLISTED_FOR_THIS_FEATURE`, migrate to Data Manager.
+
+Primary references: [developer-token migration](https://developers.google.com/google-ads/api/docs/api-policy/developer-token), [feature deprecations](https://developers.google.com/google-ads/api/docs/deprecations), [Data Manager offline events](https://developers.google.com/data-manager/api/devguides/events/google-ads/offline).
 
 ---
 
@@ -40,9 +49,28 @@ When the visitor submits a form or books a meeting:
 - Record `conversion_time` as the moment the lead was created or when the qualifying offline milestone was reached.
 
 ### 5. REPORT
-When a qualification milestone or revenue event occurs (e.g., deal marked "Closed Won", SQL status reached, trial converted to paid):
-- Query Google Ads API `conversionUploadService.uploadClickConversions`.
-- Provide `conversionActionId`, `conversionDateTime` (strictly formatted with timezone offset), `conversionValue`, `currencyCode`, and the matched `gclid`, `gbraid`, `wbraid`, or SHA-256 hashed user identifiers.
+When a qualification milestone or revenue event occurs (for example, a deal
+marked "Closed Won", an SQL status, or a paid trial):
+
+1. Select the provider path before dispatch:
+   - Existing eligible project: Google Ads API **v25** `ConversionUploadService.UploadClickConversions`.
+   - New or restricted project: Data Manager API `POST https://datamanager.googleapis.com/v1/events:ingest`.
+2. For Google Ads API, send one click identifier per conversion and provide
+   `conversionActionId`, `conversionDateTime` (timezone offset),
+   `conversionValue`, `currencyCode`, and optional hashed user identifiers.
+   Use OAuth scope `https://www.googleapis.com/auth/adwords`. The legacy
+   `developer-token` header is optional and ignored after the September 9,
+   2026 sunset; it is not a required secret.
+3. For Data Manager, map the conversion action ID to the destination product
+   field, use RFC3339 `eventTimestamp`, and send `gclid`/`gbraid`/`wbraid`
+   under `event.adIdentifiers`. Use OAuth scope
+   `https://www.googleapis.com/auth/datamanager`. Data Manager uses fast-fail,
+   not Google Ads `partial_failure`.
+
+Eligibility is independent of the API version. Since June 15, 2026, new
+adopters or projects without qualifying prior offline-upload activity can
+receive `CUSTOMER_NOT_ALLOWLISTED_FOR_THIS_FEATURE` from
+`UploadClickConversions`; migrate those workflows to Data Manager.
 
 ### 6. DEDUPE
 Prevent double counting on retries, webhook re-deliveries, or status adjustments:
@@ -51,8 +79,8 @@ Prevent double counting on retries, webhook re-deliveries, or status adjustments
 
 ### 7. VERIFY
 Validate upload success and match quality:
-- Enable `partial_failure: true` in the API request to inspect individual upload item errors without aborting the batch.
-- Verify that `response.partial_failure_error` is empty or inspect `ConversionUploadError` enum codes.
+- For Google Ads API, enable `partial_failure: true` and inspect `response.partial_failure_error` or `ConversionUploadError` codes.
+- For Data Manager, do not send `partial_failure`; its ingest request uses fast-fail semantics and returns a `requestId` on success.
 - Audit the Google Ads UI under **Goals > Conversions > Uploads** to confirm upload status, matched conversions, and processing latency.
 
 ---
@@ -75,6 +103,7 @@ Zero-dependency implementation using standard Web APIs on the frontend and Node.
 
   // 1. Capture query parameters
   const urlParams = new URLSearchParams(window.location.search);
+  const hasAdvertisingConsent = window.__CLICKTRAIL_CONSENT__?.advertising === true;
   const captured = {};
   let hasNewId = false;
 
@@ -93,7 +122,8 @@ Zero-dependency implementation using standard Web APIs on the frontend and Node.
     if (rawLocal) currentData = JSON.parse(rawLocal);
   } catch (e) {}
 
-  if (hasNewId) {
+  // First touch is write-once and persistence is disabled until consent.
+  if (hasNewId && hasAdvertisingConsent && !currentData.capturedAt) {
     currentData = {
       ...currentData,
       ...captured,
@@ -109,7 +139,7 @@ Zero-dependency implementation using standard Web APIs on the frontend and Node.
 
   // 3. Attach to DOM forms on load
   function injectFormFields() {
-    if (!currentData.gclid && !currentData.gbraid && !currentData.wbraid) return;
+    if (!hasAdvertisingConsent || (!currentData.gclid && !currentData.gbraid && !currentData.wbraid)) return;
     document.querySelectorAll('form').forEach(form => {
       PARAMS.forEach(param => {
         if (currentData[param]) {
@@ -174,11 +204,11 @@ export function formatConversionDateTime(date, timeZoneOffsetStr = '+00:00') {
 }
 
 /**
- * Uploads a single offline conversion via Google Ads REST API v17
+ * Uploads a single offline conversion via Google Ads REST API v25.
+ * Use this only for an eligible existing implementation; otherwise use Data Manager.
  */
 export async function uploadGoogleAdsConversion({
   customerId,
-  developerToken,
   accessToken,
   conversionActionId,
   gclid,
@@ -190,7 +220,7 @@ export async function uploadGoogleAdsConversion({
   conversionDate = new Date(),
   orderId
 }) {
-  const url = `https://googleads.googleapis.com/v17/customers/${customerId.replace(/-/g, '')}:uploadClickConversions`;
+  const url = `https://googleads.googleapis.com/v25/customers/${customerId.replace(/-/g, '')}:uploadClickConversions`;
   
   const conversionPayload = {
     conversionAction: `customers/${customerId.replace(/-/g, '')}/conversionActions/${conversionActionId}`,
@@ -222,7 +252,6 @@ export async function uploadGoogleAdsConversion({
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'developer-token': developerToken,
       'Authorization': `Bearer ${accessToken}`
     },
     body: JSON.stringify({
@@ -241,59 +270,79 @@ export async function uploadGoogleAdsConversion({
 
 ---
 
-### Option B: Turnkey Implementation with ClickTrail
+### Data Manager API path for new or restricted projects
 
-ClickTrail provides deterministic capture, consent enforcement, and automatic offline conversion dispatch via `@vizuh/clicktrail` / `@vizuh/clicktrail-*`.
+Use this path when the Google Ads API returns
+`CUSTOMER_NOT_ALLOWLISTED_FOR_THIS_FEATURE`, or when the project is a new
+offline-conversion adopter covered by Google’s historical restriction.
 
-#### 1. Browser Capture (`@vizuh/clicktrail-browser`)
-
-```typescript
-import { initClickTrailBrowser } from '@vizuh/clicktrail-browser';
-
-// Initialize auto-capture of gclid, gbraid, wbraid, UTMs, and form bindings
-const ct = initClickTrailBrowser({
-  cookieDomain: '.example.com',
-  persistDurationDays: 90,
-  autoInjectForms: true,
-  consentCategory: 'marketing'
+```javascript
+const response = await fetch('https://datamanager.googleapis.com/v1/events:ingest', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${accessToken}`
+  },
+  body: JSON.stringify({
+    destinations: [{
+      reference: 'google_ads',
+      operatingAccount: { accountId: customerId, accountType: 'GOOGLE_ADS' },
+      productDestinationId: String(conversionActionId)
+    }],
+    events: [{
+      destinationReferences: ['google_ads'],
+      eventTimestamp: conversionDate.toISOString(),
+      conversionValue: Number(conversionValue),
+      currency: currencyCode,
+      transactionId: orderId,
+      adIdentifiers: { gclid }
+    }]
+  })
 });
-
-// Access current acquisition envelope
-const attribution = ct.getAttribution();
-console.log('Active GCLID:', attribution.gclid);
-console.log('First-Touch Click ID:', attribution.ft_gclid);
 ```
 
-#### 2. Backend Offline Conversion Ingestion (`@vizuh/clicktrail-server`)
+Data Manager uses OAuth scope
+`https://www.googleapis.com/auth/datamanager`, does not require a developer
+token, and uses fast-fail semantics rather than `partial_failure`. Validate
+the exact destination and event schema against the [offline events reference](https://developers.google.com/data-manager/api/devguides/events/google-ads/offline) before production use.
+
+### Option B: ClickTrail implementation
+
+ClickTrail provides deterministic capture, consent-aware first-party storage,
+form attachment, and destination-neutral event construction. It does not
+claim provider delivery without a provider receipt.
+
+#### 1. Browser capture (`@vizuh/clicktrail-browser`)
 
 ```typescript
-import { ClickTrailServerClient } from '@vizuh/clicktrail-server';
+import { createClickTrail, dataLayerDestination } from '@vizuh/clicktrail-browser';
 
-const ctServer = new ClickTrailServerClient({
-  apiKey: process.env.CLICKTRAIL_API_KEY,
-  endpoint: 'https://collector.clicktrail.io/api/v1'
+const clickTrail = createClickTrail({
+  destinations: [dataLayerDestination()],
+  consentGate: () => consentManager.advertising === true,
+  storage: { cookieAttrs: { path: '/', sameSite: 'Lax', secure: true } },
+  forms: {},
 });
-
-// Emitting offline conversion upon CRM deal closure
-await ctServer.sendOfflineConversion({
-  visitorId: lead.visitorId,
-  leadId: lead.id,
-  orderId: `deal_${deal.id}`,
-  conversionAction: 'crm_qualified_deal',
-  revenue: deal.amount,
-  currency: 'USD',
-  timestamp: deal.closedAt,
-  clickIds: {
-    gclid: lead.gclid,
-    gbraid: lead.gbraid,
-    wbraid: lead.wbraid
-  },
-  user: {
-    email: lead.email // ClickTrail automatically normalizes and hashes via SHA-256
-  },
-  destinations: ['google-ads'] // ClickTrail handles OAuth, throttling, and API schemas
-});
+clickTrail.start();
 ```
+
+#### 2. Next.js server boundary (`@vizuh/clicktrail-next`)
+
+```typescript
+import { attachAttributionToAccount } from '@vizuh/clicktrail-next';
+import { cookies } from 'next/headers';
+
+const accountAttribution = await attachAttributionToAccount(
+  account.id,
+  await cookies(),
+);
+// Persist accountAttribution.first_touch with the server-owned account.
+```
+
+Use the Google Ads API or Data Manager API section above for provider
+credentials and delivery. ClickTrail supplies the normalized attribution
+record; it does not manage Google OAuth, provider allowlists, or conversion
+receipts.
 
 ---
 

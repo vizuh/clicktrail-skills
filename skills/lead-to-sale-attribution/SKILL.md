@@ -198,17 +198,17 @@ ClickTrail provides turnkey identity stitching, lead capture bindings, and autom
 #### 1. Capture & Form Binding (`@vizuh/clicktrail-browser`)
 
 ```typescript
-import { initClickTrailBrowser } from '@vizuh/clicktrail-browser';
+import { createClickTrail, dataLayerDestination } from '@vizuh/clicktrail-browser';
 
-const ct = initClickTrailBrowser({
-  autoInjectForms: true // Automatically injects visitorId & attribution into form submissions
+const ct = createClickTrail({
+  destinations: [dataLayerDestination()],
+  consentGate: () => consentManager.advertising === true,
+  forms: {},
 });
+ct.start();
 
-// Emits lead_created event with full acquisition context
-ct.track('lead_created', {
-  email: 'prospect@acme.com',
-  company: 'Acme Corp'
-});
+// Keep PII in the server-owned form/lead boundary; send only a stable lead ID.
+ct.track('lead_created', { event_id: 'evt_lead_987654', lead_id: 'lead_987654' });
 ```
 
 #### 2. Ingesting Stripe / CRM Revenue (`@vizuh/clicktrail-server`)

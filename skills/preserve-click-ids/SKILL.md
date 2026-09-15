@@ -209,22 +209,20 @@ ClickTrail provides enterprise-grade click ID preservation with automated first-
 #### Using `@vizuh/clicktrail-browser`
 
 ```typescript
-import { initClickTrailBrowser } from '@vizuh/clicktrail-browser';
+import { createClickTrail, dataLayerDestination } from '@vizuh/clicktrail-browser';
 
-// Initialize ClickTrail with automatic click-ID preservation and form injection
-const ct = initClickTrailBrowser({
-  cookieDomain: 'auto', // Resolves apex domain (.example.com)
-  persistDurationDays: 90,
-  autoInjectForms: true,
-  storageOrder: ['cookie', 'localStorage', 'sessionStorage'],
-  knownClickIds: ['gclid', 'gbraid', 'wbraid', 'fbclid', 'msclkid', 'ttclid', 'li_fat_id']
+const ct = createClickTrail({
+  destinations: [dataLayerDestination()],
+  consentGate: () => consentManager.advertising === true,
+  storage: { cookieAttrs: { path: '/', sameSite: 'Lax', secure: true } },
+  forms: {},
 });
+ct.start();
 
-// Access frozen attribution payload
-const attribution = ct.getAttribution();
+const attribution = ct.getData();
 console.log('Original First-Touch GCLID:', attribution.ft_gclid);
 console.log('Latest Last-Touch FBCLID:', attribution.lt_fbclid);
-console.log('Active Campaign Medium:', attribution.utm_medium);
+console.log('Active Campaign Medium:', attribution.lt_medium);
 ```
 
 ---

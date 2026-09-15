@@ -203,32 +203,24 @@ Zero-dependency implementation featuring JIT (Just-In-Time) link decoration and 
 ClickTrail provides seamless, secure cross-domain linker capabilities with HMAC verification and iframe bridges in `@vizuh/clicktrail-browser`.
 
 ```typescript
-import { initClickTrailBrowser } from '@vizuh/clicktrail-browser';
+import { createClickTrail, dataLayerDestination } from '@vizuh/clicktrail-browser';
 
-// Origin: domain-a.com
-const ct = initClickTrailBrowser({
+// Both hosts must use an approved-domain list and the same explicitly
+// provisioned sign/verify functions. The signing key must not be public code.
+const ct = createClickTrail({
+  destinations: [dataLayerDestination()],
+  consentGate: () => consentManager.advertising === true,
+  storage: {},
   crossDomain: {
-    enabled: true,
-    targetDomains: ['checkout-brand.com', 'brand.myshopify.com'],
-    paramName: '_ct_link',
-    hmacSecret: process.env.NEXT_PUBLIC_LINKER_SECRET,
-    ttlSeconds: 120,
-    iframeMessaging: true
-  }
+    domains: ['checkout-brand.com'],
+    sign: serverProvisionedSign,
+    verify: serverProvisionedVerify,
+  },
 });
+ct.start();
 
-// Destination: domain-b.com
-const ctDest = initClickTrailBrowser({
-  crossDomain: {
-    enabled: true,
-    acceptIncoming: true,
-    hmacSecret: process.env.NEXT_PUBLIC_LINKER_SECRET
-  }
-});
-
-// Destination automatically consumes incoming token and stitches the session
-console.log('Unified Visitor ID:', ctDest.getVisitorId());
-console.log('Inherited First-Touch GCLID:', ctDest.getAttribution().ft_gclid);
+// The destination consumes and strips the signed continuation token at start().
+console.log('Inherited First-Touch GCLID:', ct.getField('ft_gclid'));
 ```
 
 ---
