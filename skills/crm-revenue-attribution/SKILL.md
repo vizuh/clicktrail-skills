@@ -1,6 +1,6 @@
 ---
 name: crm-revenue-attribution
-description: Connect CRM revenue, deal stages, invoices, and payments to original advertising click IDs such as GCLID, GBRAID, WBRAID, FBCLID, and UTMs. Use when developers need reliable capture, persistence, attribution, deduplication, or verification across ad and CRM systems.
+description: MUST USE when CRM deals, invoices, payments, or revenue need to retain GCLID, GBRAID, WBRAID, FBCLID, or UTM context. Use for CRM-to-revenue attribution and reconciliation; do not claim a provider match without a receipt.
 ---
 
 # CRM revenue attribution

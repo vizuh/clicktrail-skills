@@ -1,0 +1,31 @@
+{
+  "name": "clicktrail-skills",
+  "owner": "vizuh",
+  "repository": "https://github.com/vizuh/clicktrail-skills",
+  "skillsShUrl": "https://skills.sh/vizuh/clicktrail-skills",
+  "install": "npx skills add vizuh/clicktrail-skills",
+  "select": "npx skills add vizuh/clicktrail-skills --skill <skill-name>",
+  "catalogVersion": "0.2.0",
+  "categories": {
+    "click_and_acquisition": [
+      "click-tracking-audit",
+      "click-id-debugging",
+      "preserve-click-ids",
+      "google-ads-click-tracking",
+      "utm-and-click-id-persistence"
+    ],
+    "handoff_and_conversion": [
+      "click-to-crm-attribution",
+      "lead-to-sale-attribution",
+      "crm-revenue-attribution",
+      "offline-conversion-tracking",
+      "google-ads-offline-conversions",
+      "conversion-reconciliation"
+    ],
+    "platform_and_architecture": [
+      "attribution-debugging",
+      "cross-domain-attribution",
+      "meta-capi-deduplication"
+    ]
+  }
+}

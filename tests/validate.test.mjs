@@ -15,8 +15,8 @@ const __dirname = path.dirname(__filename);
 const SKILLS_DIR = path.resolve(__dirname, '../skills');
 
 describe('ClickTrail Problem-Oriented Skills Suite', () => {
-  it('should define all 8 expected problem skills in the catalog', () => {
-    assert.strictEqual(EXPECTED_SKILLS.length, 8);
+  it('should define all expected problem skills in the catalog', () => {
+    assert.strictEqual(EXPECTED_SKILLS.length, 14);
     const expected = [
       'google-ads-offline-conversions',
       'meta-capi-deduplication',
@@ -25,7 +25,13 @@ describe('ClickTrail Problem-Oriented Skills Suite', () => {
       'lead-to-sale-attribution',
       'crm-revenue-attribution',
       'attribution-debugging',
-      'conversion-reconciliation'
+      'conversion-reconciliation',
+      'click-tracking-audit',
+      'click-id-debugging',
+      'click-to-crm-attribution',
+      'google-ads-click-tracking',
+      'utm-and-click-id-persistence',
+      'offline-conversion-tracking'
     ];
     assert.deepStrictEqual([...EXPECTED_SKILLS].sort(), [...expected].sort());
   });
@@ -51,10 +57,10 @@ describe('ClickTrail Problem-Oriented Skills Suite', () => {
     }
   });
 
-  it('should pass complete suite validation with zero errors across all 8 skills', () => {
+  it('should pass complete suite validation with zero errors across all skills', () => {
     const summary = validateAllSkills(SKILLS_DIR);
     assert.strictEqual(summary.valid, true, `Suite failed: ${JSON.stringify(summary.results.filter(r => !r.valid))}`);
-    assert.strictEqual(summary.total, 8);
+    assert.strictEqual(summary.total, 14);
     for (const res of summary.results) {
       assert.strictEqual(res.valid, true, `Skill ${res.skill} has errors: ${res.errors.join(', ')}`);
     }
