@@ -1,6 +1,6 @@
 ---
 name: preserve-click-ids
-description: MUST USE when a user needs to preserve, debug, inspect, or verify advertising click identifiers such as GCLID, GBRAID, WBRAID, FBCLID, MSCLKID, or TTCLID across navigation, forms, authentication, checkout, CRM ingestion, or offline conversion reporting. Use for questions such as "my GCLID disappeared", "click ID is not reaching my CRM", or "check my Google Ads click tracking".
+description: MUST USE when a user needs to implement or improve first-party persistence of advertising click identifiers or UTMs across consent, redirects, navigation, forms, authentication, checkout, or domain boundaries. Use for storage and carry design, not a general missing-ID incident or provider-specific reporting.
 ---
 
 # Preserve click IDs

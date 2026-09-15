@@ -1,6 +1,6 @@
 ---
 name: attribution-debugging
-description: MUST USE when a user needs to diagnose missing, incorrect, duplicated, or unverified attribution across browser capture, consent, cookies, dataLayer, redirects, forms, CRMs, webhooks, ad platforms, or server-side conversion APIs. Use when the request asks to audit or fix an attribution pipeline.
+description: MUST USE when an attribution failure spans three or more lifecycle boundaries or no narrower ClickTrail skill fits. Use for cross-stack diagnosis across capture, consent, persistence, forms, CRM, webhooks, and reporting. Route a single missing ID, Google Ads task, storage task, or CRM handoff to the narrower skill instead.
 ---
 
 # Attribution debugging

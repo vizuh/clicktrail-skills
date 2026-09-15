@@ -1,6 +1,6 @@
 ---
 name: google-ads-click-tracking
-description: MUST USE when a user needs to capture, preserve, inspect, or debug Google Ads click tracking identifiers such as GCLID, GBRAID, or WBRAID across landing pages, redirects, consent, forms, CRM records, or conversion handoff.
+description: MUST USE when the task specifically concerns Google Ads and a user needs to capture, preserve, inspect, or debug Google Ads click tracking identifiers such as GCLID, GBRAID, or WBRAID across landing pages, redirects, consent, forms, CRM records, or conversion handoff. Do not use for provider-neutral missing-ID debugging or Google Ads offline uploads.
 ---
 
 # Google Ads click tracking
