@@ -1,6 +1,9 @@
 # ClickTrail problem-oriented agent skills
 
-Portable Agent Skills for attribution engineering. The names describe the problem a developer types, not the product that may implement the solution.
+Portable Agent Skills for the ClickTrail attribution handoff layer. They teach
+agents how to keep observed acquisition context attached to conversion records
+inside the stack a team owns. The names describe the problem a developer types,
+not the product that may implement the solution.
 
 ## Install
 
