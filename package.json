@@ -1,0 +1,34 @@
+{
+  "name": "clicktrail-skills",
+  "version": "1.0.0",
+  "description": "Problem-oriented agent skills for skills.sh, Claude, Codex, and Copilot addressing Google Ads offline conversions, Meta CAPI deduplication, click ID preservation, cross-domain attribution, and conversion reconciliation.",
+  "type": "module",
+  "main": "scripts/validate-skills.mjs",
+  "scripts": {
+    "validate": "node scripts/validate-skills.mjs",
+    "test": "node --test tests/validate.test.mjs"
+  },
+  "keywords": [
+    "attribution",
+    "agent-skills",
+    "skills-sh",
+    "google-ads",
+    "meta-capi",
+    "offline-conversions",
+    "gclid",
+    "gbraid",
+    "wbraid",
+    "fbclid",
+    "deduplication",
+    "cross-domain",
+    "crm-attribution",
+    "clicktrail",
+    "tracking"
+  ],
+  "author": "Vizuh",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vizuh/clicktrail-skills"
+  }
+}
