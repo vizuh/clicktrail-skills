@@ -1,6 +1,6 @@
 ---
 name: conversion-reconciliation
-description: Reconcile CRM, checkout, analytics, Google Ads, and Meta CAPI conversion records using stable event IDs, timestamps, values, currencies, and click identifiers. Use when developers need reliable capture, persistence, attribution, deduplication, or verification across ad and CRM systems.
+description: MUST USE when CRM, checkout, analytics, Google Ads, Meta CAPI, or webhook conversion records disagree. Use stable event IDs, timestamps, values, currencies, click identifiers, and explicit unknown states to find missing, duplicate, or orphaned records.
 ---
 
 # Conversion reconciliation

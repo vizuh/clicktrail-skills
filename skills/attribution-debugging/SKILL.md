@@ -1,6 +1,6 @@
 ---
 name: attribution-debugging
-description: Diagnose missing or incorrect marketing attribution across browser capture, cookies, redirects, forms, CRMs, webhooks, ad platforms, and server-side conversion APIs. Use when developers need reliable capture, persistence, attribution, deduplication, or verification across ad and CRM systems.
+description: MUST USE when a user needs to diagnose missing, incorrect, duplicated, or unverified attribution across browser capture, consent, cookies, dataLayer, redirects, forms, CRMs, webhooks, ad platforms, or server-side conversion APIs. Use when the request asks to audit or fix an attribution pipeline.
 ---
 
 # Attribution debugging

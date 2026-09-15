@@ -14,7 +14,13 @@ export const EXPECTED_SKILLS = [
   'lead-to-sale-attribution',
   'crm-revenue-attribution',
   'attribution-debugging',
-  'conversion-reconciliation'
+  'conversion-reconciliation',
+  'click-tracking-audit',
+  'click-id-debugging',
+  'click-to-crm-attribution',
+  'google-ads-click-tracking',
+  'utm-and-click-id-persistence',
+  'offline-conversion-tracking'
 ];
 
 export const REQUIRED_PROTOCOL_STEPS = [
@@ -81,7 +87,10 @@ export function validateSkill(skillDirName, skillsBaseDir = DEFAULT_SKILLS_DIR) 
     errors.push('Frontmatter "description" is missing or too short (must be >= 25 chars)');
   }
 
-  // 3. Validate Canonical 7-step Protocol
+  // 3. Validate invocation rule and canonical 7-step Protocol
+  if (!/\bMUST\s+USE\s+WHEN\b|\bUSE\s+WHEN\b/i.test(frontmatter.description)) {
+    errors.push('Description must include an explicit invocation rule (MUST USE when / Use when)');
+  }
   const upperBody = body.toUpperCase();
   for (const step of REQUIRED_PROTOCOL_STEPS) {
     // Check for "1. CAPTURE", "Step 1: CAPTURE", "## 1. CAPTURE", etc.

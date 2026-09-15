@@ -1,6 +1,6 @@
 ---
 name: preserve-click-ids
-description: Preserve advertising click IDs (GCLID, GBRAID, WBRAID, FBCLID, MSCLKID, TTCLID, LI_FAT_ID) against Safari ITP cookie caps, 301/302 redirects, and single-page application navigation.
+description: MUST USE when a user needs to preserve, debug, inspect, or verify advertising click identifiers such as GCLID, GBRAID, WBRAID, FBCLID, MSCLKID, or TTCLID across navigation, forms, authentication, checkout, CRM ingestion, or offline conversion reporting. Use for questions such as "my GCLID disappeared", "click ID is not reaching my CRM", or "check my Google Ads click tracking".
 ---
 
 # Preserve Click IDs

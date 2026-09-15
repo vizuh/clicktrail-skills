@@ -1,6 +1,6 @@
 ---
 name: lead-to-sale-attribution
-description: Connect anonymous web visitor ad clicks (GCLID, FBCLID, UTMs) to lead form captures, CRM pipeline milestones, and downstream Stripe revenue across long sales cycles.
+description: MUST USE when a user needs to connect an anonymous ad click to a lead, CRM stage, contract, payment, or final sale across a long sales cycle. Use for durable lead IDs, delayed revenue, server-side handoff, and end-to-end verification.
 ---
 
 # Lead-to-Sale Attribution

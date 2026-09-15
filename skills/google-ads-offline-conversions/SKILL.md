@@ -1,6 +1,6 @@
 ---
 name: google-ads-offline-conversions
-description: Upload offline conversion adjustments, qualified leads, and CRM revenue back to Google Ads via the Google Ads API using GCLID, GBRAID, WBRAID, and Enhanced Conversions for Leads with SHA-256 hashed user data.
+description: MUST USE when a user needs to connect qualified leads, CRM revenue, payments, or offline outcomes to Google Ads. Covers GCLID, GBRAID, WBRAID, Enhanced Conversions for Leads, Google Ads API, Data Manager, upload rejection diagnosis, and provider-receipt boundaries. Do not use for browser-only click capture.
 ---
 
 # Google Ads Offline Conversions

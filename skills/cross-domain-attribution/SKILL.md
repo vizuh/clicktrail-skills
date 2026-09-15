@@ -1,6 +1,6 @@
 ---
 name: cross-domain-attribution
-description: Preserve visitor identity, session state, and ad click IDs (GCLID, FBCLID) across different apex domains (e.g., company.com to checkout.com or Shopify, Stripe, Calendly) using cryptographically signed linker parameters and postMessage handshakes.
+description: MUST USE when attribution, visitor identity, consent state, or event IDs must survive a transition between different apex domains, hosted checkout, booking, authentication, iframe, Shopify, Stripe, or Calendly. Use when first-party storage stops at a domain boundary.
 ---
 
 # Cross-Domain Attribution

@@ -1,6 +1,6 @@
 ---
 name: meta-capi-deduplication
-description: Deduplicate Meta Pixel and Conversions API (CAPI) events using matching event_id, event_name, _fbp, _fbc, and SHA-256 hashed user data to prevent double-counted conversions and dropped ROAS.
+description: MUST USE when a user needs to prevent duplicate Meta Pixel and Conversions API events or verify matching event_name, event_id, _fbp, _fbc, and hashed user data. Use for Meta CAPI deduplication, missing events, and conversion-count discrepancies.
 ---
 
 # Meta Conversions API (CAPI) Deduplication
