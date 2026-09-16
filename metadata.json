@@ -5,7 +5,7 @@
   "skillsShUrl": "https://skills.sh/vizuh/clicktrail-skills",
   "install": "npx skills add vizuh/clicktrail-skills",
   "select": "npx skills add vizuh/clicktrail-skills --skill <skill-name>",
-  "catalogVersion": "0.2.0",
+  "catalogVersion": "0.3.0",
   "categories": {
     "click_and_acquisition": [
       "click-tracking-audit",
@@ -23,6 +23,7 @@
       "conversion-reconciliation"
     ],
     "platform_and_architecture": [
+      "clicktrail-evidence-system",
       "attribution-debugging",
       "cross-domain-attribution",
       "meta-capi-deduplication"

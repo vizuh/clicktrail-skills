@@ -20,7 +20,8 @@ export const EXPECTED_SKILLS = [
   'click-to-crm-attribution',
   'google-ads-click-tracking',
   'utm-and-click-id-persistence',
-  'offline-conversion-tracking'
+  'offline-conversion-tracking',
+  'clicktrail-evidence-system'
 ];
 
 export const REQUIRED_PROTOCOL_STEPS = [

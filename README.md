@@ -24,10 +24,18 @@ npx skills add vizuh/clicktrail-skills --skill google-ads-offline-conversions
 
 Each skill is independently useful. The shared protocol is
 `CAPTURE → PERSIST → CARRY → ATTACH → REPORT → DEDUPE → VERIFY`.
+For a complete audit, Verify owns observations and deterministic statuses; MCP
+owns the agent-facing subprocess boundary; TypeSafe is optional advisory
+routing only. See the `clicktrail-evidence-system` skill for the flow.
 
 ## Start here
 
-Use `click-tracking-audit` for a codebase and URL audit. It routes to the
+Use `clicktrail-evidence-system` when the request spans a source snapshot,
+a staging URL, and multiple lifecycle boundaries. It coordinates
+`clicktrail-mcp`, `clicktrail-verify`, and the narrower skills without changing
+factual findings.
+
+Use `click-tracking-audit` for a focused codebase and URL audit. It routes to the
 smallest relevant skill:
 
 - `click-id-debugging` — a click ID or UTM disappeared;
@@ -61,6 +69,7 @@ smallest relevant skill:
 
 ### Platform and architecture
 
+- `clicktrail-evidence-system`
 - `attribution-debugging`
 - `cross-domain-attribution`
 - `meta-capi-deduplication`
