@@ -47,9 +47,18 @@ console errors, and page errors. Use deterministic assertions for pass/fail.
 ### Option B: Turnkey ClickTrail implementation
 
 Use `@vizuh/clicktrail-verify` for the local source inventory and browser runner,
-then use `@vizuh/clicktrail-mcp` to expose the report to a coding agent. Map
-only explicit ClickTrail surfaces to ClickTrail repositories; keep custom host
+then use `@vizuh/clicktrail-mcp` `verify_project` to expose the canonical
+`0.3.0` evidence report to a coding agent. Pass only `report.evidence` to
+`advise_report` for optional TypeSafe routing and remediation ranking. Map only
+explicit ClickTrail surfaces to ClickTrail repositories; keep custom host
 tracking assigned to the host application.
+
+## Evidence-first flow
+
+Prefer `verify_project` over manually declaring stage results when an explicit
+repository path and synthetic/staging URL are available. Every factual finding
+must retain its `evidenceRefs`. TypeSafe may recommend the next skill, but it
+cannot change `PASS`, `FAIL`, `WARN`, `NOT_RUN`, or `UNKNOWN`.
 
 ## Failure Modes & Debugging Checks
 

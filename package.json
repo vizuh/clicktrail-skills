@@ -1,6 +1,6 @@
 {
   "name": "clicktrail-skills",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Problem-oriented agent skills for click tracking, click-ID debugging, consent-aware persistence, CRM attribution, offline conversion tracking, and conversion reconciliation.",
   "type": "module",
   "main": "scripts/validate-skills.mjs",
