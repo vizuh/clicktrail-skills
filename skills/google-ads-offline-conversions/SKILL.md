@@ -18,6 +18,12 @@ Choose the destination before writing upload code:
 
 Primary references: [developer-token migration](https://developers.google.com/google-ads/api/docs/api-policy/developer-token), [feature deprecations](https://developers.google.com/google-ads/api/docs/deprecations), [Data Manager offline events](https://developers.google.com/data-manager/api/devguides/events/google-ads/offline).
 
+If the Google Ads conversion action imports a GA4 key event instead of
+receiving uploads, and GA4 shows those purchases as Unassigned or `(not set)`
+while Google Ads reports 0, use `ga4-unassigned-conversions` first. Adding an
+upload path does not fix the GA4 session join and double counts once it is
+fixed.
+
 ---
 
 ## The Canonical 7-Step Protocol

@@ -48,4 +48,5 @@ For a framework adapter, use the corresponding `@vizuh/clicktrail-*` package whe
 - **Duplicate conversion:** compare browser/server `event_name` and `event_id`; check retry and queue markers.
 - **Wrong revenue:** compare minor/major currency units, ISO currency, timezone, and source event timestamp.
 - **Consent violation:** prove that denied consent prevents storage and delivery, not only UI rendering.
+- **GA4 purchases Unassigned or `(not set)`:** route to `ga4-unassigned-conversions` for the Measurement Protocol session join, GA4 cookie parsing, reserved tag fields, payment-return referrals, and the GA4-to-Google Ads import.
 - **Unverifiable result:** label it unknown and inspect destination diagnostics; a successful HTTP request is not proof of attribution.
