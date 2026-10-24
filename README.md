@@ -46,7 +46,8 @@ smallest relevant skill:
 - `cross-domain-attribution` — different apex domains or hosted checkout;
 - `meta-capi-deduplication` — Meta browser/server duplicate events;
 - `attribution-debugging` — broad attribution failures;
-- `conversion-reconciliation` — source, CRM, checkout, and destination mismatch.
+- `conversion-reconciliation` — source, CRM, checkout, and destination mismatch;
+- `ga4-unassigned-conversions` — GA4 purchases Unassigned or `(not set)`, or Google Ads importing 0 from GA4.
 
 ## Skills
 
@@ -66,6 +67,7 @@ smallest relevant skill:
 - `offline-conversion-tracking`
 - `google-ads-offline-conversions`
 - `conversion-reconciliation`
+- `ga4-unassigned-conversions`
 
 ### Platform and architecture
 

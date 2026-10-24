@@ -17,7 +17,7 @@ const SKILLS_DIR = path.resolve(__dirname, '../skills');
 
 describe('ClickTrail Problem-Oriented Skills Suite', () => {
   it('should define all expected problem skills in the catalog', () => {
-    assert.strictEqual(EXPECTED_SKILLS.length, 15);
+    assert.strictEqual(EXPECTED_SKILLS.length, 16);
     const expected = [
       'google-ads-offline-conversions',
       'meta-capi-deduplication',
@@ -33,7 +33,8 @@ describe('ClickTrail Problem-Oriented Skills Suite', () => {
       'google-ads-click-tracking',
       'utm-and-click-id-persistence',
       'offline-conversion-tracking',
-      'clicktrail-evidence-system'
+      'clicktrail-evidence-system',
+      'ga4-unassigned-conversions'
     ];
     assert.deepStrictEqual([...EXPECTED_SKILLS].sort(), [...expected].sort());
   });
@@ -71,10 +72,18 @@ describe('ClickTrail Problem-Oriented Skills Suite', () => {
     }
   });
 
+  it('routes GA4 Unassigned conversions to their own skill and cross-links it', () => {
+    const read = (name) => fs.readFileSync(path.join(SKILLS_DIR, name, 'SKILL.md'), 'utf8');
+    assert.match(parseFrontmatter(read('ga4-unassigned-conversions')).data.description, /google-ads-offline-conversions/);
+    for (const name of ['google-ads-offline-conversions', 'conversion-reconciliation', 'attribution-debugging']) {
+      assert.match(read(name), /`ga4-unassigned-conversions`/);
+    }
+  });
+
   it('should pass complete suite validation with zero errors across all skills', () => {
     const summary = validateAllSkills(SKILLS_DIR);
     assert.strictEqual(summary.valid, true, `Suite failed: ${JSON.stringify(summary.results.filter(r => !r.valid))}`);
-    assert.strictEqual(summary.total, 15);
+    assert.strictEqual(summary.total, 16);
     for (const res of summary.results) {
       assert.strictEqual(res.valid, true, `Skill ${res.skill} has errors: ${res.errors.join(', ')}`);
     }

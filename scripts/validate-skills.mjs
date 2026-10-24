@@ -21,7 +21,8 @@ export const EXPECTED_SKILLS = [
   'google-ads-click-tracking',
   'utm-and-click-id-persistence',
   'offline-conversion-tracking',
-  'clicktrail-evidence-system'
+  'clicktrail-evidence-system',
+  'ga4-unassigned-conversions'
 ];
 
 export const REQUIRED_PROTOCOL_STEPS = [

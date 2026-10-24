@@ -88,5 +88,6 @@ Load only the resource that matches the detected surface:
 
 Use `click-id-debugging` for a provider-neutral missing identifier,
 `utm-and-click-id-persistence` for storage behavior,
-`click-to-crm-attribution` for lead attachment, and
-`offline-conversion-tracking` for destination reconciliation.
+`click-to-crm-attribution` for lead attachment,
+`offline-conversion-tracking` for destination reconciliation, and
+`ga4-unassigned-conversions` when GA4 purchases are Unassigned.
